@@ -36,7 +36,7 @@ const seed = async () => {
       INSERT INTO categories(name, description, user_id) VALUES('harley', 'her life, her soul, her baby girl', 1);
       INSERT INTO categories(name, description, user_id) VALUES('food', 'she enjoys cooking more than consuming it', 1);
       INSERT INTO categories(name, description, user_id) VALUES('reading', 'her best way to escape from the comfort of her condo', 1);
-      INSERT INTO categories(name, description, user_id) VALUES('the mountains', 'her favourite place to be', 1);
+      INSERT INTO categories(name, description, user_id) VALUES('mountains', 'her favourite place to be', 1);
 
       INSERT INTO interests(name, description, link, categories_id, parentInterest) VALUES('walking harley', 'morning, afternoon, and night: this doggy needs her walks!', null, 1, null);
       INSERT INTO interests(name, description, link, categories_id, parentInterest) VALUES('training harley', 'this high energy doggo needs to know how to conduct herself like a proper lady!', null, 1, null);
@@ -97,4 +97,5 @@ const init = async () => {
 
 module.exports = {
   init,
+  db,
 };
