@@ -5,7 +5,8 @@ const morgan = require('morgan');
 const app = express();
 
 app.use(morgan('dev'));
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, '../public')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 
 const port = process.env.PORT || '5997';
 const serverInit = async () => {

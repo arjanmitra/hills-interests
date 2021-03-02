@@ -12,7 +12,7 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         options: {
-          presets: [],
+          presets: ['@babel/preset-react'],
         },
       },
     ],
