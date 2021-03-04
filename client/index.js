@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import { motion } from 'framer-motion';
+import Emoji from 'react-emoji-render';
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      loading: '',
       categories: [],
       categoryId: 0,
       categoryDescription: '',
@@ -27,18 +28,17 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <div>{this.state.loading}</div>
         <h1>Hill's Interests</h1>
-        <h3>
-          Did you know that I'm terrible at keeping track of Hill's interests?
-          So, I decided to build this app to keep track of them all!
-        </h3>
         <div>
           <div id="categories">
-            Categories:
             {this.state.categories.map((category) => (
-              <div key={category.id}>
-                <button
+              <motion.div
+                id="category"
+                key={category.id}
+                transition={{ duration: 0.2 }}
+                whileHover={{ scale: 1.25, duration: 0.5 }}
+              >
+                <h1
                   key={category.id}
                   onClick={async () => {
                     try {
@@ -49,55 +49,65 @@ class App extends React.Component {
                         interests: resultInterests,
                         selected: category.name,
                         subInterests: [],
+                        categories: [],
                       });
                     } catch (error) {
                       console.log(error);
                     }
                   }}
-                  onMouseEnter={() => {
-                    this.setState({
-                      categoryDescription: category.description,
-                      categoryId: category.id,
-                    });
-                  }}
-                  onMouseLeave={() => {
-                    this.setState({ categoryDescription: '' });
-                  }}
                 >
-                  {category.name}
-                </button>
+                  <Emoji text={category.name} />
+                </h1>
                 <p>
-                  {this.state.categoryId === category.id
-                    ? this.state.categoryDescription
-                    : null}
+                  <Emoji text={category.description} />
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
-          <div>
-            {this.state.interests.map((interest) => (
-              <div
-                key={interest.id}
-                onClick={async () => {
-                  try {
-                    const resultSubInterests = (
-                      await axios.get(
-                        `/api/categories/${this.state.selected}/${interest.name}`
-                      )
-                    ).data;
-                    this.setState({ subInterests: resultSubInterests });
-                  } catch (error) {
-                    console.log(error);
-                  }
+            {this.state.categories.length === 0 ? (
+              <p
+                onClick={() => {
+                  this.componentDidMount();
+                  this.setState({ interests: [], subInterests: [] });
                 }}
               >
-                {interest.name}
-              </div>
-            ))}
+                back
+              </p>
+            ) : null}
+          </div>
+          <div>
+            <div>
+              {this.state.interests.map((interest) => (
+                <div
+                  id="interest"
+                  key={interest.id}
+                  onClick={async () => {
+                    try {
+                      const resultSubInterests = (
+                        await axios.get(
+                          `/api/categories/${this.state.selected}/${interest.name}`
+                        )
+                      ).data;
+
+                      this.setState({ subInterests: resultSubInterests });
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }}
+                >
+                  <h4>{interest.name}</h4>
+                  <p>{interest.description}</p>
+                  <p>{interest.link}</p>
+                </div>
+              ))}
+            </div>
           </div>
           <div>
             {this.state.subInterests.map((subInterest) => (
-              <div>{subInterest.name}</div>
+              <div key={subInterest.id}>
+                <h5>{subInterest.name}</h5>
+                <p>{subInterest.description}</p>
+                <p>{subInterest.link}</p>
+              </div>
             ))}
           </div>
         </div>

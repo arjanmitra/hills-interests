@@ -4,22 +4,50 @@
   text-align: center;
 }
 
+body {
+  background: linear-gradient(-180deg, #fe621d, #e996b6, #23a6d5, #23d5ab);
+  color: white;
+}
+
+h1 {
+  font-weight: 200;
+  font-size: 40;
+}
+
+#categories h1 {
+  font-weight: 200;
+  font-size: 60;
+}
+
+h4 {
+  font-weight: 300;
+}
+
 div {
-  margin: 1rem;
+  margin: 2rem;
+}
+
+p {
+  font-size: small;
+  /* width: 125px; */
+  text-align: center;
 }
 
 #categories {
   display: flex;
   flex-flow: column wrap;
+  justify-content: space-around;
 }
-#categories button {
-  margin: 1rem;
-  border: solid 1px blue;
-  background-color: lightblue;
-  border-radius: 1rem;
-}
-#categories button:hover {
+#category:hover {
   transition: 0.5s;
-  background-color: lightseagreen;
-  color: white;
+  color: black;
+}
+#categories h4 {
+  margin: 1rem;
+}
+
+#interest {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
 }
