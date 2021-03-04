@@ -5,7 +5,7 @@
 }
 
 body {
-  background: linear-gradient(-180deg, #fe621d, #e996b6, #23a6d5, #23d5ab);
+  background: linear-gradient(-180deg, #e996b6, #23a6d5, #23d5ab);
   color: white;
 }
 
@@ -19,8 +19,14 @@ h1 {
   font-size: 60;
 }
 
+h3,
 h4 {
   font-weight: 300;
+}
+
+#interest:hover {
+  transition: 0.5s;
+  color: black;
 }
 
 div {
@@ -31,6 +37,41 @@ p {
   font-size: small;
   /* width: 125px; */
   text-align: center;
+  font-weight: 125;
+}
+
+a {
+  font-style: italic;
+  text-decoration: none;
+  color: white;
+}
+
+a:hover {
+  font-style: italic;
+  text-decoration: none;
+  transition: 0.5s;
+  color: rgb(202, 42, 69);
+}
+
+#interest {
+  text-decoration: none;
+  color: white;
+}
+
+#interest:hover {
+  text-decoration: none;
+  transition: 0.5s;
+  color: black;
+}
+
+#welcome {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25rem;
+  font-size: 4rem;
+  font-weight: 200;
 }
 
 #categories {

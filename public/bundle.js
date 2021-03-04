@@ -48754,11 +48754,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+let resultInterests = [];
 
 class App extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super();
     this.state = {
+      landingPage: true,
       categories: [],
       categoryId: 0,
       categoryDescription: '',
@@ -48782,39 +48784,53 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
     }
   }
 
+  async getResultInterests(categoryName) {
+    try {
+      resultInterests = (await axios__WEBPACK_IMPORTED_MODULE_2___default().get(`/api/categories/${categoryName}`)).data;
+      this.setState({
+        interests: resultInterests,
+        selected: categoryName,
+        subInterests: [],
+        categories: []
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   render() {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, "Hill's Interests"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, !this.state.landingPage ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.h1, {
+      animate: {
+        scale: [0, 1]
+      }
+    }, "Hill's Interests"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       id: "categories"
     }, this.state.categories.map(category => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
       id: "category",
       key: category.id,
-      transition: {
-        duration: 0.2
-      },
+      animate: {
+        scale: [0, 1]
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.h1, {
       whileHover: {
-        scale: 1.25,
-        duration: 0.5
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", {
+        scale: 1.1
+      },
+      whileTap: {
+        scale: 0.9
+      },
       key: category.id,
-      onClick: async () => {
-        try {
-          const resultInterests = (await axios__WEBPACK_IMPORTED_MODULE_2___default().get(`/api/categories/${category.name}`)).data;
-          this.setState({
-            interests: resultInterests,
-            selected: category.name,
-            subInterests: [],
-            categories: []
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      }
+      onClick: () => this.getResultInterests(category.name)
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
       text: category.name
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
       text: category.description
-    })))), this.state.categories.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    })))), this.state.categories.length === 0 && this.state.interests.length !== 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.h2, {
+      whileHover: {
+        scale: 1.3
+      },
+      whileTap: {
+        scale: 0.9
+      },
       onClick: () => {
         this.componentDidMount();
         this.setState({
@@ -48822,22 +48838,93 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
           subInterests: []
         });
       }
-    }, "back") : null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.interests.map(interest => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
+      text: ":back:"
+    })) : this.state.categories.length === 0 && this.state.interests.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.h2, {
+      whileHover: {
+        scale: 1.3
+      },
+      whileTap: {
+        scale: 0.9
+      },
+      onClick: async () => {
+        resultInterests = (await axios__WEBPACK_IMPORTED_MODULE_2___default().get(`/api/categories/${this.state.selected}`)).data;
+        console.log(resultInterests);
+        this.setState({
+          interests: resultInterests,
+          subInterests: []
+        });
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
+      text: ":back:"
+    })) : null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.interests.map(interest => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
       id: "interest",
       key: interest.id,
+      animate: {
+        scale: [0, 1]
+      },
       onClick: async () => {
         try {
           const resultSubInterests = (await axios__WEBPACK_IMPORTED_MODULE_2___default().get(`/api/categories/${this.state.selected}/${interest.name}`)).data;
-          this.setState({
-            subInterests: resultSubInterests
-          });
+
+          if (resultSubInterests.length !== 0) {
+            this.setState({
+              subInterests: resultSubInterests,
+              interests: [],
+              categories: []
+            });
+          } else {
+            this.setState({
+              subInterests: resultSubInterests
+            });
+          }
         } catch (error) {
           console.log(error);
         }
       }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h4", null, interest.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, interest.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, interest.link))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.subInterests.map(subInterest => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-      key: subInterest.id
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", null, subInterest.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, subInterest.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, subInterest.link))))));
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
+      whileHover: {
+        scale: 1.1
+      },
+      whileTap: {
+        scale: 0.9
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+      href: interest.link
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
+      text: interest.name
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, interest.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, interest.link)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.subInterests.map(subInterest => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
+      key: subInterest.id,
+      animate: {
+        scale: [0, 1]
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
+      whileHover: {
+        scale: 1.1
+      },
+      whileTap: {
+        scale: 0.9
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+      href: subInterest.link
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, subInterest.name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, subInterest.description))))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
+      id: "welcome",
+      transition: {
+        duration: 0.2
+      },
+      whileHover: {
+        scale: 1.25,
+        duration: 0.5
+      },
+      onClick: () => {
+        this.setState({
+          landingPage: false
+        });
+        this.componentDidMount();
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
+      text: ":crown::zap:"
+    })));
   }
 
 }
