@@ -8,7 +8,7 @@ export default function SubInterest(props) {
       <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
         {' '}
         {subInterest.link ? (
-          <a href={subInterest.link}>
+          <a href={subInterest.link} target={'_blank'}>
             <h1>{subInterest.name}</h1>
           </a>
         ) : (

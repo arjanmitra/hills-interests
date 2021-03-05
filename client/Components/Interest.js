@@ -12,7 +12,7 @@ export default function Interest(props) {
     >
       <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
         {interest.link ? (
-          <a href={interest.link}>
+          <a href={interest.link} target={'_blank'}>
             <h1>
               <Emoji text={interest.name} />
             </h1>

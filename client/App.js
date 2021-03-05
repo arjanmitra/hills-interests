@@ -1,10 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import { motion } from 'framer-motion';
-import Emoji from 'react-emoji-render';
 import Category from './Components/Category';
 import Interest from './Components/Interest';
 import SubInterest from './Components/SubInterest';
+import WelcomePage from './Components/WelcomePage';
+import Back from './Components/Back';
+import Title from './Components/Title';
 
 let resultInterests = [];
 
@@ -22,6 +23,9 @@ export default class App extends React.Component {
     };
     this.getResultInterests = this.getResultInterests.bind(this);
     this.getResultSubInterests = this.getResultSubInterests.bind(this);
+    this.welcomePageState = this.welcomePageState.bind(this);
+    this.backButtonInterests = this.backButtonInterests.bind(this);
+    this.backButtonSubInterests = this.backButtonSubInterests.bind(this);
   }
 
   async componentDidMount() {
@@ -72,12 +76,30 @@ export default class App extends React.Component {
     }
   }
 
+  welcomePageState() {
+    this.setState({ landingPage: false });
+    this.componentDidMount();
+  }
+  backButtonInterests() {
+    this.componentDidMount();
+    this.setState({ interests: [], subInterests: [] });
+  }
+  async backButtonSubInterests() {
+    resultInterests = (
+      await axios.get(`/api/categories/${this.state.selected}`)
+    ).data;
+    this.setState({
+      interests: resultInterests,
+      subInterests: [],
+    });
+  }
+
   render() {
     return (
       <div>
         {!this.state.landingPage ? (
           <div>
-            <motion.h1 animate={{ scale: [0, 1] }}>Hill's Interests</motion.h1>
+            <Title />
             <div>
               <div id="categories">
                 {this.state.categories.map((category) => (
@@ -89,36 +111,10 @@ export default class App extends React.Component {
                 ))}
                 {this.state.categories.length === 0 &&
                 this.state.interests.length !== 0 ? (
-                  <motion.h2
-                    whileHover={{ scale: 1.3 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => {
-                      this.componentDidMount();
-                      this.setState({ interests: [], subInterests: [] });
-                    }}
-                  >
-                    <Emoji text=":back:" />
-                  </motion.h2>
+                  <Back backButtonFunc={this.backButtonInterests} />
                 ) : this.state.categories.length === 0 &&
                   this.state.interests.length === 0 ? (
-                  <motion.h2
-                    whileHover={{ scale: 1.3 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={async () => {
-                      resultInterests = (
-                        await axios.get(
-                          `/api/categories/${this.state.selected}`
-                        )
-                      ).data;
-                      console.log(resultInterests);
-                      this.setState({
-                        interests: resultInterests,
-                        subInterests: [],
-                      });
-                    }}
-                  >
-                    <Emoji text=":back:" />
-                  </motion.h2>
+                  <Back backButtonFunc={this.backButtonSubInterests} />
                 ) : null}
               </div>
               <div>
@@ -140,19 +136,7 @@ export default class App extends React.Component {
             </div>
           </div>
         ) : (
-          <motion.div
-            id="welcome"
-            animate={{ scale: [0, 1.5, 1] }}
-            transition={{ duration: 1 }}
-            onClick={() => {
-              this.setState({ landingPage: false });
-              this.componentDidMount();
-            }}
-          >
-            <motion.div whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.8 }}>
-              <Emoji text=":crown::zap:" />
-            </motion.div>
-          </motion.div>
+          <WelcomePage welcomePageState={this.welcomePageState} />
         )}
       </div>
     );
