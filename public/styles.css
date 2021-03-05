@@ -56,6 +56,9 @@ a:hover {
 #interest {
   text-decoration: none;
   color: white;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
 }
 
 #interest:hover {
@@ -87,8 +90,16 @@ a:hover {
   margin: 1rem;
 }
 
-#interest {
+#subinterest {
+  text-decoration: none;
+  color: white;
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
+}
+
+#subinterest:hover {
+  text-decoration: none;
+  transition: 0.5s;
+  color: black;
 }

@@ -1888,6 +1888,307 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./client/App.js":
+/*!***********************!*\
+  !*** ./client/App.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ App)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! framer-motion */ "./node_modules/framer-motion/dist/es/render/dom/motion.js");
+/* harmony import */ var react_emoji_render__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-emoji-render */ "./node_modules/react-emoji-render/lib/index.js");
+/* harmony import */ var _Components_Category__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/Category */ "./client/Components/Category.js");
+/* harmony import */ var _Components_Interest__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Components/Interest */ "./client/Components/Interest.js");
+/* harmony import */ var _Components_SubInterest__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Components/SubInterest */ "./client/Components/SubInterest.js");
+
+
+
+
+
+
+
+let resultInterests = [];
+class App extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super();
+    this.state = {
+      landingPage: true,
+      categories: [],
+      categoryId: 0,
+      categoryDescription: '',
+      interests: [],
+      subInterests: [],
+      selected: ''
+    };
+    this.getResultInterests = this.getResultInterests.bind(this);
+    this.getResultSubInterests = this.getResultSubInterests.bind(this);
+  }
+
+  async componentDidMount() {
+    try {
+      const categories = (await axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/categories')).data;
+      this.setState({
+        categories
+      });
+    } catch (error) {
+      console.log(error);
+      this.setState({
+        loading: `was not able to retrieve categories!`
+      });
+    }
+  }
+
+  async getResultInterests(categoryName) {
+    try {
+      resultInterests = (await axios__WEBPACK_IMPORTED_MODULE_1___default().get(`/api/categories/${categoryName}`)).data;
+      this.setState({
+        interests: resultInterests,
+        selected: categoryName,
+        subInterests: [],
+        categories: []
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getResultSubInterests(interestName) {
+    try {
+      const resultSubInterests = (await axios__WEBPACK_IMPORTED_MODULE_1___default().get(`/api/categories/${this.state.selected}/${interestName}`)).data;
+
+      if (resultSubInterests.length !== 0) {
+        this.setState({
+          subInterests: resultSubInterests,
+          interests: [],
+          categories: []
+        });
+      } else {
+        this.setState({
+          subInterests: resultSubInterests
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, !this.state.landingPage ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_6__.motion.h1, {
+      animate: {
+        scale: [0, 1]
+      }
+    }, "Hill's Interests"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      id: "categories"
+    }, this.state.categories.map(category => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Components_Category__WEBPACK_IMPORTED_MODULE_3__.default, {
+      key: category.id,
+      category: category,
+      getResultInterests: this.getResultInterests
+    })), this.state.categories.length === 0 && this.state.interests.length !== 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_6__.motion.h2, {
+      whileHover: {
+        scale: 1.3
+      },
+      whileTap: {
+        scale: 0.9
+      },
+      onClick: () => {
+        this.componentDidMount();
+        this.setState({
+          interests: [],
+          subInterests: []
+        });
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_2__.default, {
+      text: ":back:"
+    })) : this.state.categories.length === 0 && this.state.interests.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_6__.motion.h2, {
+      whileHover: {
+        scale: 1.3
+      },
+      whileTap: {
+        scale: 0.9
+      },
+      onClick: async () => {
+        resultInterests = (await axios__WEBPACK_IMPORTED_MODULE_1___default().get(`/api/categories/${this.state.selected}`)).data;
+        console.log(resultInterests);
+        this.setState({
+          interests: resultInterests,
+          subInterests: []
+        });
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_2__.default, {
+      text: ":back:"
+    })) : null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.interests.map(interest => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Components_Interest__WEBPACK_IMPORTED_MODULE_4__.default, {
+      key: interest.id,
+      interest: interest,
+      getResultSubInterests: this.getResultSubInterests
+    })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.subInterests.map(subInterest => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Components_SubInterest__WEBPACK_IMPORTED_MODULE_5__.default, {
+      key: subInterest.id,
+      subInterest: subInterest
+    }))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_6__.motion.div, {
+      id: "welcome",
+      animate: {
+        scale: [0, 1.5, 1]
+      },
+      transition: {
+        duration: 1
+      },
+      onClick: () => {
+        this.setState({
+          landingPage: false
+        });
+        this.componentDidMount();
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_6__.motion.div, {
+      whileHover: {
+        scale: 1.3
+      },
+      whileTap: {
+        scale: 0.8
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_2__.default, {
+      text: ":crown::zap:"
+    }))));
+  }
+
+}
+
+/***/ }),
+
+/***/ "./client/Components/Category.js":
+/*!***************************************!*\
+  !*** ./client/Components/Category.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Category)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! framer-motion */ "./node_modules/framer-motion/dist/es/render/dom/motion.js");
+/* harmony import */ var react_emoji_render__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-emoji-render */ "./node_modules/react-emoji-render/lib/index.js");
+
+
+
+function Category(props) {
+  const {
+    category,
+    getResultInterests
+  } = props;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_2__.motion.div, {
+    id: "category",
+    animate: {
+      scale: [0, 1]
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_2__.motion.h1, {
+    whileHover: {
+      scale: 1.1
+    },
+    whileTap: {
+      scale: 0.9
+    },
+    key: category.id,
+    onClick: () => getResultInterests(category.name)
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_1__.default, {
+    text: category.name
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_1__.default, {
+    text: category.description
+  })));
+}
+
+/***/ }),
+
+/***/ "./client/Components/Interest.js":
+/*!***************************************!*\
+  !*** ./client/Components/Interest.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Interest)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! framer-motion */ "./node_modules/framer-motion/dist/es/render/dom/motion.js");
+/* harmony import */ var react_emoji_render__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-emoji-render */ "./node_modules/react-emoji-render/lib/index.js");
+
+
+
+function Interest(props) {
+  const {
+    interest,
+    getResultSubInterests
+  } = props;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_2__.motion.div, {
+    id: "interest",
+    animate: {
+      scale: [0, 1]
+    },
+    onClick: () => getResultSubInterests(interest.name)
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_2__.motion.div, {
+    whileHover: {
+      scale: 1.1
+    },
+    whileTap: {
+      scale: 0.9
+    }
+  }, interest.link ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+    href: interest.link
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_1__.default, {
+    text: interest.name
+  }))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_1__.default, {
+    text: interest.name
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, interest.description)));
+}
+
+/***/ }),
+
+/***/ "./client/Components/SubInterest.js":
+/*!******************************************!*\
+  !*** ./client/Components/SubInterest.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ SubInterest)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! framer-motion */ "./node_modules/framer-motion/dist/es/render/dom/motion.js");
+
+
+function SubInterest(props) {
+  const {
+    subInterest
+  } = props;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_1__.motion.div, {
+    id: "subinterest",
+    animate: {
+      scale: [0, 1]
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_1__.motion.div, {
+    whileHover: {
+      scale: 1.1
+    },
+    whileTap: {
+      scale: 0.9
+    }
+  }, ' ', subInterest.link ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+    href: subInterest.link
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, subInterest.name)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, subInterest.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, subInterest.description)));
+}
+
+/***/ }),
+
 /***/ "./node_modules/classnames/index.js":
 /*!******************************************!*\
   !*** ./node_modules/classnames/index.js ***!
@@ -48743,193 +49044,13 @@ var __webpack_exports__ = {};
   !*** ./client/index.js ***!
   \*************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! framer-motion */ "./node_modules/framer-motion/dist/es/render/dom/motion.js");
-/* harmony import */ var react_emoji_render__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-emoji-render */ "./node_modules/react-emoji-render/lib/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App */ "./client/App.js");
 
 
 
-
-
-let resultInterests = [];
-
-class App extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super();
-    this.state = {
-      landingPage: true,
-      categories: [],
-      categoryId: 0,
-      categoryDescription: '',
-      interests: [],
-      subInterests: [],
-      selected: ''
-    };
-  }
-
-  async componentDidMount() {
-    try {
-      const categories = (await axios__WEBPACK_IMPORTED_MODULE_2___default().get('/api/categories')).data;
-      this.setState({
-        categories
-      });
-    } catch (error) {
-      console.log(error);
-      this.setState({
-        loading: `was not able to retrieve categories!`
-      });
-    }
-  }
-
-  async getResultInterests(categoryName) {
-    try {
-      resultInterests = (await axios__WEBPACK_IMPORTED_MODULE_2___default().get(`/api/categories/${categoryName}`)).data;
-      this.setState({
-        interests: resultInterests,
-        selected: categoryName,
-        subInterests: [],
-        categories: []
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  render() {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, !this.state.landingPage ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.h1, {
-      animate: {
-        scale: [0, 1]
-      }
-    }, "Hill's Interests"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-      id: "categories"
-    }, this.state.categories.map(category => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
-      id: "category",
-      key: category.id,
-      animate: {
-        scale: [0, 1]
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.h1, {
-      whileHover: {
-        scale: 1.1
-      },
-      whileTap: {
-        scale: 0.9
-      },
-      key: category.id,
-      onClick: () => this.getResultInterests(category.name)
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
-      text: category.name
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
-      text: category.description
-    })))), this.state.categories.length === 0 && this.state.interests.length !== 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.h2, {
-      whileHover: {
-        scale: 1.3
-      },
-      whileTap: {
-        scale: 0.9
-      },
-      onClick: () => {
-        this.componentDidMount();
-        this.setState({
-          interests: [],
-          subInterests: []
-        });
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
-      text: ":back:"
-    })) : this.state.categories.length === 0 && this.state.interests.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.h2, {
-      whileHover: {
-        scale: 1.3
-      },
-      whileTap: {
-        scale: 0.9
-      },
-      onClick: async () => {
-        resultInterests = (await axios__WEBPACK_IMPORTED_MODULE_2___default().get(`/api/categories/${this.state.selected}`)).data;
-        console.log(resultInterests);
-        this.setState({
-          interests: resultInterests,
-          subInterests: []
-        });
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
-      text: ":back:"
-    })) : null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.interests.map(interest => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
-      id: "interest",
-      key: interest.id,
-      animate: {
-        scale: [0, 1]
-      },
-      onClick: async () => {
-        try {
-          const resultSubInterests = (await axios__WEBPACK_IMPORTED_MODULE_2___default().get(`/api/categories/${this.state.selected}/${interest.name}`)).data;
-
-          if (resultSubInterests.length !== 0) {
-            this.setState({
-              subInterests: resultSubInterests,
-              interests: [],
-              categories: []
-            });
-          } else {
-            this.setState({
-              subInterests: resultSubInterests
-            });
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
-      whileHover: {
-        scale: 1.1
-      },
-      whileTap: {
-        scale: 0.9
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
-      href: interest.link
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
-      text: interest.name
-    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, interest.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, interest.link)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.subInterests.map(subInterest => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
-      key: subInterest.id,
-      animate: {
-        scale: [0, 1]
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
-      whileHover: {
-        scale: 1.1
-      },
-      whileTap: {
-        scale: 0.9
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
-      href: subInterest.link
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, subInterest.name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, subInterest.description))))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(framer_motion__WEBPACK_IMPORTED_MODULE_4__.motion.div, {
-      id: "welcome",
-      transition: {
-        duration: 0.2
-      },
-      whileHover: {
-        scale: 1.25,
-        duration: 0.5
-      },
-      onClick: () => {
-        this.setState({
-          landingPage: false
-        });
-        this.componentDidMount();
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_emoji_render__WEBPACK_IMPORTED_MODULE_3__.default, {
-      text: ":crown::zap:"
-    })));
-  }
-
-}
-
-react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(App, null), document.querySelector('#root'));
+react_dom__WEBPACK_IMPORTED_MODULE_0__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_App__WEBPACK_IMPORTED_MODULE_2__.default, null), document.querySelector('#root'));
 })();
 
 /******/ })()
