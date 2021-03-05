@@ -2,7 +2,7 @@
   "name": "hills-interests",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
@@ -22,12 +22,12 @@
     "react-dom": "^17.0.1",
     "react-emoji-render": "^1.2.4",
     "webpack": "^5.24.2",
-    "webpack-cli": "^4.5.0"
-  },
-  "devDependencies": {
+    "webpack-cli": "^4.5.0",
     "@babel/core": "^7.13.8",
     "@babel/preset-react": "^7.12.13",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "^8.2.2"
+  },
+  "devDependencies": {
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7"
   }
